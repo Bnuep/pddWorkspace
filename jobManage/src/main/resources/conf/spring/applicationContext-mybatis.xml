@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		">
+
+    <!-- 配置数据源 使用的是Druid数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.mysql.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.mysql.url}"/>
+        <property name="user" value="${jdbc.mysql.username}"/>
+        <property name="password" value="${jdbc.mysql.password}"/>
+        <!--初始化时创建的连接数，应在minPoolSize与maxPoolSize之间取值。默认为3-->
+        <property name="initialPoolSize" value="${jdbc.initialSize}"/>
+        <!--连接池中保留的最小连接数。默认为3-->
+        <property name="minPoolSize" value="${jdbc.minIdle}"/>
+        <!--连接池中保留的最大连接数。默认为15-->
+        <property name="maxPoolSize" value="${jdbc.maxIdle}"/>
+        <!-- 允许连接池最大生成100个PreparedStatement对象 -->
+        <property name="maxStatements" value="${jdbc.maxActive}" />
+        <!-- 连接有效时间，连接超过100000秒未使用，则该连接丢弃 -->
+        <property name="maxIdleTime" value="${jdbc.maxWait}" />
+        <!-- 连接用完时，一次产生的新连接步进值为2 -->
+        <!--<property name="acquireIncrement" value="2" />-->
+        <!-- 获取连接失败后再尝试10次，再失败则返回DAOException异常 -->
+        <property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
+        <!-- 获取下一次连接时最短间隔600毫秒，有助于提高性能 -->
+        <property name="acquireRetryDelay" value="${jdbc.acquireRetryDelay}" />
+        <!-- 每个1200秒检查连接对象状态 -->
+        <!--<property name="idleConnectionTestPeriod" value="1200" />-->
+        <!-- 获取新连接的超时时间为10000毫秒 -->
+        <!--<property name="checkoutTimeout" value="10000" />-->
+    </bean>
+
+    <!-- 单数据源配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:conf/mybatis/mybatis.xml" />
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--多数据源配置-->
+    <!--<bean id="multipleDataSource" class="com.pdd.common.util.MultipleDataSource">-->
+        <!--<property name="defaultTargetDataSource" ref="dataSource"/>-->
+        <!--<property name="targetDataSources">-->
+            <!--<map>-->
+                <!--<entry key="mySqlDataSource" value-ref="dataSource"/>-->
+                <!--<entry key="sqlServerDataSource" value-ref="sqlServerDataSource"/>-->
+            <!--</map>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.andy.shop.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 注解方式配置事物 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+</beans>
