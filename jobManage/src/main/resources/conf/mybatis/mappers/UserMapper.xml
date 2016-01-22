@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pdd.business.dao.UserMapper">
+
+    <resultMap type="User" id="userResultMap">
+        <id property="id" column="id"/>
+        <result property="name" column="NAME"/>
+    </resultMap>
+
+    <!-- 查询学生，根据id -->
+    <select id="getUserByName" parameterType="String" resultType="User" resultMap="userResultMap">
+        <![CDATA[
+            SELECT * from PDD_COMMON_JOBS pcj
+                WHERE pcj.NAME = #{name}
+        ]]>
+    </select>
+
+    <!-- 查询学生列表 -->
+    <select id="getUserAll"  resultType="list" resultMap="userResultMap">
+        <![CDATA[
+            SELECT * from PDD_COMMON_JOBS
+        ]]>
+    </select>
+
+</mapper>
