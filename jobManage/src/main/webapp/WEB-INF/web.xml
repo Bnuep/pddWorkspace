@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
     <display-name>jobManage</display-name>
 
     <!-- 用spring Encoding,解决乱码问题 -->
@@ -26,21 +27,23 @@
     <!--配置加载applicationContext.xml文件路径-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:conf/spring/applicationContext.xml</param-value>
+        <param-value>
+            classpath:conf/spring/applicationContext.xml
+        </param-value>
     </context-param>
-    <!--配置spring监听器-->
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-
     <!-- 配置加载log4j.properties文件路径 -->
     <context-param>
         <param-name>log4jConfigLocation</param-name>
         <param-value>classpath:conf/log4j.properties</param-value>
     </context-param>
+
     <!-- 配置log4j监听器 -->
     <listener>
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <!--配置spring监听器-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
     <!-- springmvc配置 -->
